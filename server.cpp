@@ -3,6 +3,7 @@
 #include <core/socket/SocketContextFactory.h>
 #include <list>
 #include <net/in/stream/legacy/SocketServer.h>
+#include <string>
 
 class ChatApp {
 private:
@@ -94,6 +95,20 @@ int main(int argc, char* argv[]) {
             std::cout << "Error: Server trying to listen on " << socketAddress.toString() << " : errno = " << errnum;
         }
     });
+
+    /*
+        sighandler_t oldSigIntHandler = core::system::signal(SIGINT, stoponsig);
+
+        do {
+            core::SNodeC::tick(10);
+        } while (!stop);
+
+        core::SNodeC::free();
+
+        core::system::signal(SIGINT, oldSigIntHandler);
+
+        return 0;
+    */
 
     return core::SNodeC::start();
 }
