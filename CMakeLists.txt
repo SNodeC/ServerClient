@@ -12,5 +12,5 @@ find_package(
 add_executable(server server.cpp)
 target_link_libraries(server PRIVATE snodec::core-legacy snodec::net-in)
 
-add_executable(client client.cpp)
+add_executable(client client.cpp ClientContext.cpp ClientContext.h KeyboardReader.cpp KeyboardReader.h)
 target_link_libraries(client PRIVATE snodec::core-legacy snodec::net-in)
