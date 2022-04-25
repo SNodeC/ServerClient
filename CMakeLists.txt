@@ -9,7 +9,7 @@ find_package(
     snodec COMPONENTS core-legacy net-in
 )
 
-add_executable(server server.cpp)
+add_executable(server server.cpp ChatApp.cpp ChatApp.h ServerContext.cpp ServerContext.h)
 target_link_libraries(server PRIVATE snodec::core-legacy snodec::net-in)
 
 add_executable(client client.cpp ClientContext.cpp ClientContext.h KeyboardReader.cpp KeyboardReader.h)

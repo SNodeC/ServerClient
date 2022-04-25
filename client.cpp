@@ -4,7 +4,7 @@
 #include <net/in/stream/legacy/SocketClient.h>
 #include <string>
 
-int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[]) {
+int main(int argc, char* argv[]) {
     using Client = net::in::stream::legacy::SocketClient<ClientContextFactory>;
     using SocketConnection = Client::SocketConnection;
 
