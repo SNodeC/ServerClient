@@ -3,11 +3,12 @@
 
 #include <core/SNodeC.h>
 #include <net/in/stream/legacy/SocketServer.h>
+#include <net/in6/stream/legacy/SocketServer.h>
+#include <net/un/stream/legacy/SocketServer.h>
 #include <string>
 
 int main(int argc, char* argv[]) {
     core::SNodeC::init(argc, argv);
-
     using Server = net::in::stream::legacy::SocketServer<ServerContextFactory>;
     using SocketConnection = net::in::stream::legacy::SocketServer<ServerContextFactory>::SocketConnection;
 
@@ -26,7 +27,51 @@ int main(int argc, char* argv[]) {
         if (errnum == 0) {
             std::cout << "Server listening on " << socketAddress.toString() << std::endl;
         } else {
-            std::cout << "Error: Server trying to listen on " << socketAddress.toString() << " : errno = " << errnum;
+            std::cout << "Error: Server trying to listen on " << socketAddress.toString() << " : errno = " << errnum << std::endl;
+        }
+    });
+
+    using Server6 = net::in6::stream::legacy::SocketServer<ServerContextFactory>;
+    using SocketConnection6 = net::in6::stream::legacy::SocketServer<ServerContextFactory>::SocketConnection;
+
+    Server6 server6(
+        [](SocketConnection6* socketConnection) -> void {
+            std::cout << "OnConnect from: " << socketConnection->getRemoteAddress().toString() << std::endl;
+        },
+        [](SocketConnection6* socketConnection) -> void {
+            std::cout << "OnConnected from: " << socketConnection->getRemoteAddress().toString() << std::endl;
+        },
+        [](SocketConnection6* socketConnection) -> void {
+            std::cout << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString() << std::endl;
+        });
+
+    server6.listen(8081, 5, [](const Server6::SocketAddress& socketAddress, int errnum) -> void {
+        if (errnum == 0) {
+            std::cout << "Server6 listening on " << socketAddress.toString() << std::endl;
+        } else {
+            std::cout << "Error: Server6 trying to listen on " << socketAddress.toString() << " : errno = " << errnum << std::endl;
+        }
+    });
+
+    using ServerUn = net::un::stream::legacy::SocketServer<ServerContextFactory>;
+    using SocketConnectionUn = net::un::stream::legacy::SocketServer<ServerContextFactory>::SocketConnection;
+
+    ServerUn serverUn(
+        [](SocketConnectionUn* socketConnection) -> void {
+            std::cout << "OnConnect from: " << socketConnection->getRemoteAddress().toString() << std::endl;
+        },
+        [](SocketConnectionUn* socketConnection) -> void {
+            std::cout << "OnConnected from: " << socketConnection->getRemoteAddress().toString() << std::endl;
+        },
+        [](SocketConnectionUn* socketConnection) -> void {
+            std::cout << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString() << std::endl;
+        });
+
+    serverUn.listen("/tmp/testsocket", 5, [](const SocketConnectionUn::SocketAddress& socketAddress, int errnum) -> void {
+        if (errnum == 0) {
+            std::cout << "Server6 listening on " << socketAddress.toString() << std::endl;
+        } else {
+            std::cout << "Error: Server6 trying to listen on " << socketAddress.toString() << " : errno = " << errnum << std::endl;
         }
     });
 
