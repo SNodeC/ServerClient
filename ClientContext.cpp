@@ -25,12 +25,14 @@ void ClientContext::onDisconnected() {
     }
 }
 
-void ClientContext::onReceiveFromPeer() {
+std::size_t ClientContext::onReceiveFromPeer() {
     char buffer[1024];
 
-    ssize_t numBytesRead = readFromPeer(buffer, 1024);
+    std::size_t numBytesRead = readFromPeer(buffer, 1024);
 
     VLOG(0) << "Buffer: " << std::string(buffer, numBytesRead);
+
+    return numBytesRead;
 }
 
 void ClientContext::keyboardReaderAway() {

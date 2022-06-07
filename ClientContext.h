@@ -17,7 +17,7 @@ public:
 private:
     void onConnected() override;
     void onDisconnected() override;
-    void onReceiveFromPeer() override;
+    std::size_t onReceiveFromPeer() override;
 
     KeyboardReader* keyboardReader = nullptr;
 };

@@ -18,17 +18,19 @@ void ServerContext::onDisconnected() {
     ChatApp::instance().removeServerContext(this);
 }
 
-void ServerContext::onReceiveFromPeer() {
+std::size_t ServerContext::onReceiveFromPeer() {
     char buffer[1024];
 
-    ssize_t numBytesRead = readFromPeer(buffer, 1023);
+    std::size_t numBytesRead = readFromPeer(buffer, 1023);
     buffer[numBytesRead] = 0;
 
     std::cout << "Buffer: " << buffer << std::endl;
 
     ChatApp::instance().echoToAll(std::string(buffer, numBytesRead));
+
+    return numBytesRead;
 }
 
-core::socket::SocketContext *ServerContextFactory::create(core::socket::SocketConnection *socketConnection) {
+core::socket::SocketContext* ServerContextFactory::create(core::socket::SocketConnection* socketConnection) {
     return new ServerContext(socketConnection);
 }

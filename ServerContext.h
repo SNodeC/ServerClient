@@ -17,7 +17,7 @@ private:
 
     void onDisconnected() override;
 
-    void onReceiveFromPeer() override;
+    std::size_t onReceiveFromPeer() override;
 };
 
 class ServerContextFactory : public core::socket::SocketContextFactory {
