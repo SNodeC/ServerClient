@@ -2,6 +2,7 @@
 #include "ServerContext.h"
 
 #include <any>
+#include <cerrno>
 #include <core/SNodeC.h>
 #include <map>
 #include <net/in/stream/legacy/SocketServer.h>
@@ -29,10 +30,13 @@ int main(int argc, char* argv[]) {
         });
 
     server.listen(8080, 5, [](const Server::SocketAddress& socketAddress, int errnum) -> void {
-        if (errnum == 0) {
-            std::cout << "Server listening on " << socketAddress.toString() << std::endl;
+        if (errnum < 0) {
+            PLOG(ERROR) << "OnError";
+        } else if (errnum > 0) {
+            errno = errnum;
+            PLOG(ERROR) << "OnError: " << socketAddress.toString();
         } else {
-            std::cout << "Error: Server trying to listen on " << socketAddress.toString() << " : errno = " << errnum << std::endl;
+            VLOG(0) << "snode.c connecting to " << socketAddress.toString();
         }
     });
 
@@ -58,10 +62,13 @@ int main(int argc, char* argv[]) {
         options);
 
     servertls.listen(8082, 5, [](const ServerTLS::SocketAddress& socketAddress, int errnum) -> void {
-        if (errnum == 0) {
-            std::cout << "TLS-Server listening on " << socketAddress.toString() << std::endl;
+        if (errnum < 0) {
+            PLOG(ERROR) << "OnError";
+        } else if (errnum > 0) {
+            errno = errnum;
+            PLOG(ERROR) << "OnError: " << socketAddress.toString();
         } else {
-            std::cout << "Error: TLS-Server trying to listen on " << socketAddress.toString() << " : errno = " << errnum << std::endl;
+            VLOG(0) << "snode.c connecting to " << socketAddress.toString();
         }
     });
 
@@ -80,10 +87,13 @@ int main(int argc, char* argv[]) {
         });
 
     server6.listen(8081, 5, [](const Server6::SocketAddress& socketAddress, int errnum) -> void {
-        if (errnum == 0) {
-            std::cout << "Server6 listening on " << socketAddress.toString() << std::endl;
+        if (errnum < 0) {
+            PLOG(ERROR) << "OnError";
+        } else if (errnum > 0) {
+            errno = errnum;
+            PLOG(ERROR) << "OnError: " << socketAddress.toString();
         } else {
-            std::cout << "Error: Server6 trying to listen on " << socketAddress.toString() << " : errno = " << errnum << std::endl;
+            VLOG(0) << "snode.c connecting to " << socketAddress.toString();
         }
     });
 
@@ -102,10 +112,13 @@ int main(int argc, char* argv[]) {
         });
 
     serverUn.listen("/tmp/testsocket", 5, [](const SocketConnectionUn::SocketAddress& socketAddress, int errnum) -> void {
-        if (errnum == 0) {
-            std::cout << "Server6 listening on " << socketAddress.toString() << std::endl;
+        if (errnum < 0) {
+            PLOG(ERROR) << "OnError";
+        } else if (errnum > 0) {
+            errno = errnum;
+            PLOG(ERROR) << "OnError: " << socketAddress.toString();
         } else {
-            std::cout << "Error: Server6 trying to listen on " << socketAddress.toString() << " : errno = " << errnum << std::endl;
+            VLOG(0) << "snode.c connecting to " << socketAddress.toString();
         }
     });
 

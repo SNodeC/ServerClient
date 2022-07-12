@@ -1,5 +1,6 @@
 #include "ClientContext.h"
 
+#include <cerrno>
 #include <core/SNodeC.h>
 #include <net/in/stream/tls/SocketClient.h>
 #include <net/un/stream/legacy/SocketClient.h>
@@ -53,10 +54,13 @@ int main(int argc, char* argv[]) {
         options);
 
     clienttls.connect("localhost", 8082, [](const ClientTLS::SocketAddress& socketAddress, int errnum) -> void {
-        if (errnum == 0) {
-            std::cout << "Client connected to " << socketAddress.toString() << std::endl;
+        if (errnum < 0) {
+            PLOG(ERROR) << "OnError";
+        } else if (errnum > 0) {
+            errno = errnum;
+            PLOG(ERROR) << "OnError: " << socketAddress.toString();
         } else {
-            std::cout << "Error: Client trying to connect to " << socketAddress.toString() << " : errno = " << errnum;
+            VLOG(0) << "snode.c connecting to " << socketAddress.toString();
         }
     });
 
