@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
         } else if (errnum > 0) {
             PLOG(ERROR) << "OnError: " << socketAddress.toString();
         } else {
-            VLOG(0) << "snode.c connecting to " << socketAddress.toString();
+            VLOG(0) << "snode.c listening on " << socketAddress.toString();
         }
     });
 
@@ -42,10 +42,10 @@ int main(int argc, char* argv[]) {
     using SocketConnectionTLS = net::in::stream::tls::SocketServer<ServerContextFactory>::SocketConnection;
 
     std::map<std::string, std::any> options;
-    options["CertChain"] = "/home/voc/projects/ServerClient1/WebServerCertificateChain.pem";
-    options["CertChainKey"] = "/home/voc/projects/ServerClient1/Volker_Christian_-_WEB-Cert.pem";
+    options["CertChain"] = "/home/voc/projects/ServerClient/WebServerCertificateChain.pem";
+    options["CertChainKey"] = "/home/voc/projects/ServerClient/Volker_Christian_-_WEB-Cert.pem";
     options["Password"] = "pentium5";
-    options["CaFile"] = "/home/voc/projects/ServerClient1/Client-Root-CA.crt";
+    options["CaFile"] = "/home/voc/projects/ServerClient/Client-Root-CA.crt";
 
     ServerTLS servertls(
         [](SocketConnectionTLS* socketConnection) -> void {
@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
         } else if (errnum > 0) {
             PLOG(ERROR) << "OnError: " << socketAddress.toString();
         } else {
-            VLOG(0) << "snode.c connecting to " << socketAddress.toString();
+            VLOG(0) << "snode.c listening on " << socketAddress.toString();
         }
     });
 
@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
         } else if (errnum > 0) {
             PLOG(ERROR) << "OnError: " << socketAddress.toString();
         } else {
-            VLOG(0) << "snode.c connecting to " << socketAddress.toString();
+            VLOG(0) << "snode.c listening on " << socketAddress.toString();
         }
     });
 
@@ -113,7 +113,7 @@ int main(int argc, char* argv[]) {
         } else if (errnum > 0) {
             PLOG(ERROR) << "OnError: " << socketAddress.toString();
         } else {
-            VLOG(0) << "snode.c connecting to " << socketAddress.toString();
+            VLOG(0) << "snode.c listening on " << socketAddress.toString();
         }
     });
 

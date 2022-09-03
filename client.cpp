@@ -35,10 +35,10 @@ int main(int argc, char* argv[]) {
     using SocketConnectionTLS = ClientTLS::SocketConnection;
 
     std::map<std::string, std::any> options;
-    options["CertChain"] = "/home/voc/projects/ServerClient1/Client-End-Entity.pem";
-    options["CertChainKey"] = "/home/voc/projects/ServerClient1/Client-End-Entity-Key.pem";
+    options["CertChain"] = "/home/voc/projects/ServerClient/Client-End-Entity.pem";
+    options["CertChainKey"] = "/home/voc/projects/ServerClient/Client-End-Entity-Key.pem";
     options["Password"] = "pentium5";
-    options["CaFile"] = "/home/voc/projects/ServerClient1/VolkerChristianRootCA.pem";
+    options["CaFile"] = "/home/voc/projects/ServerClient/VolkerChristianRootCA.pem";
 
     ClientTLS clienttls(
         [](SocketConnectionTLS* socketConnection) -> void {
