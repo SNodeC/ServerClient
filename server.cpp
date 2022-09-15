@@ -1,15 +1,11 @@
-#include "ChatApp.h"
-#include "ServerContext.h"
+#include "ServerContext.h" // IWYU pragma: keep
+#include "log/Logger.h"
 
-#include <any>
 #include <core/SNodeC.h>
-#include <map>
 #include <net/in/stream/legacy/SocketServer.h>
 #include <net/in/stream/tls/SocketServer.h>
 #include <net/in6/stream/legacy/SocketServer.h>
 #include <net/un/stream/legacy/SocketServer.h>
-#include <set>
-#include <string>
 
 int main(int argc, char* argv[]) {
     core::SNodeC::init(argc, argv);
@@ -19,13 +15,13 @@ int main(int argc, char* argv[]) {
 
     Server server(
         [](SocketConnection* socketConnection) -> void {
-            std::cout << "OnConnect from: " << socketConnection->getRemoteAddress().toString() << std::endl;
+            VLOG(0) << "OnConnect from: " << socketConnection->getRemoteAddress().toString();
         },
         [](SocketConnection* socketConnection) -> void {
-            std::cout << "OnConnected from: " << socketConnection->getRemoteAddress().toString() << std::endl;
+            VLOG(0) << "OnConnected from: " << socketConnection->getRemoteAddress().toString();
         },
         [](SocketConnection* socketConnection) -> void {
-            std::cout << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString() << std::endl;
+            VLOG(0) << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString();
         });
 
     server.listen(8080, 5, [](const Server::SocketAddress& socketAddress, int errnum) -> void {
@@ -49,13 +45,13 @@ int main(int argc, char* argv[]) {
 
     ServerTLS servertls(
         [](SocketConnectionTLS* socketConnection) -> void {
-            std::cout << "OnConnect from: " << socketConnection->getRemoteAddress().toString() << std::endl;
+            VLOG(0) << "OnConnect from: " << socketConnection->getRemoteAddress().toString();
         },
         [](SocketConnectionTLS* socketConnection) -> void {
-            std::cout << "OnConnected from: " << socketConnection->getRemoteAddress().toString() << std::endl;
+            VLOG(0) << "OnConnected from: " << socketConnection->getRemoteAddress().toString();
         },
         [](SocketConnectionTLS* socketConnection) -> void {
-            std::cout << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString() << std::endl;
+            VLOG(0) << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString();
         },
         options);
 
@@ -74,13 +70,13 @@ int main(int argc, char* argv[]) {
 
     Server6 server6(
         [](SocketConnection6* socketConnection) -> void {
-            std::cout << "OnConnect from: " << socketConnection->getRemoteAddress().toString() << std::endl;
+            VLOG(0) << "OnConnect from: " << socketConnection->getRemoteAddress().toString();
         },
         [](SocketConnection6* socketConnection) -> void {
-            std::cout << "OnConnected from: " << socketConnection->getRemoteAddress().toString() << std::endl;
+            VLOG(0) << "OnConnected from: " << socketConnection->getRemoteAddress().toString();
         },
         [](SocketConnection6* socketConnection) -> void {
-            std::cout << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString() << std::endl;
+            VLOG(0) << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString();
         });
 
     server6.listen(8081, 5, [](const Server6::SocketAddress& socketAddress, int errnum) -> void {
@@ -98,13 +94,13 @@ int main(int argc, char* argv[]) {
 
     ServerUn serverUn(
         [](SocketConnectionUn* socketConnection) -> void {
-            std::cout << "OnConnect from: " << socketConnection->getRemoteAddress().toString() << std::endl;
+            VLOG(0) << "OnConnect from: " << socketConnection->getRemoteAddress().toString();
         },
         [](SocketConnectionUn* socketConnection) -> void {
-            std::cout << "OnConnected from: " << socketConnection->getRemoteAddress().toString() << std::endl;
+            VLOG(0) << "OnConnected from: " << socketConnection->getRemoteAddress().toString();
         },
         [](SocketConnectionUn* socketConnection) -> void {
-            std::cout << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString() << std::endl;
+            VLOG(0) << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString();
         });
 
     serverUn.listen("/tmp/testsocket", 5, [](const SocketConnectionUn::SocketAddress& socketAddress, int errnum) -> void {

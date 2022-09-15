@@ -2,8 +2,8 @@
 
 #include "ClientContext.h"
 
+#include <cerrno>
 #include <iostream>
-#include <stdexcept> // for invalid_argument
 #include <string>
 #include <unistd.h>
 

@@ -3,6 +3,7 @@
 #include "ChatApp.h"
 
 #include <iostream>
+#include <string> // for string
 
 ServerContext::ServerContext(core::socket::SocketConnection* socketConnection)
     : core::socket::SocketContext(socketConnection) {

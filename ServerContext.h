@@ -1,8 +1,10 @@
 #ifndef SERVERCONTEXT_H
 #define SERVERCONTEXT_H
 
-#include <core/socket/SocketContext.h>
+#include <core/socket/SocketContext.h> // IWYU pragma: export
 #include <core/socket/SocketContextFactory.h>
+
+// IWYU pragma: no_include <SocketContext.h>
 
 namespace core::socket {
     class SocketConnection;

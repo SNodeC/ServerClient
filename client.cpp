@@ -1,35 +1,34 @@
-#include "ClientContext.h"
+#include "ClientContext.h" // IWYU pragma: keep
+#include "log/Logger.h"
 
 #include <core/SNodeC.h>
 #include <net/in/stream/tls/SocketClient.h>
 #include <net/un/stream/legacy/SocketClient.h>
-#include <string>
 
 int main(int argc, char* argv[]) {
-    //    using Client = net::un::stream::legacy::SocketClient<ClientContextFactory>;
-    //    using SocketConnection = Client::SocketConnection;
+    using Client = net::un::stream::legacy::SocketClient<ClientContextFactory>;
+    using SocketConnection = Client::SocketConnection;
 
     core::SNodeC::init(argc, argv);
-    /*
-        Client client(
-            [](SocketConnection* socketConnection) -> void {
-                std::cout << "OnConnect from: " << socketConnection->getRemoteAddress().toString() << std::endl;
-            },
-            [](SocketConnection* socketConnection) -> void {
-                std::cout << "OnConnected from: " << socketConnection->getRemoteAddress().toString() << std::endl;
-            },
-            [](SocketConnection* socketConnection) -> void {
-                std::cout << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString() << std::endl;
-            });
 
-        client.connect("/tmp/testsocket", [](const Client::SocketAddress& socketAddress, int errnum) -> void {
-            if (errnum == 0) {
-                std::cout << "Client connected to " << socketAddress.toString() << std::endl;
-            } else {
-                std::cout << "Error: Client trying to connect to " << socketAddress.toString() << " : errno = " << errnum;
-            }
+    Client client(
+        [](SocketConnection* socketConnection) -> void {
+            VLOG(0) << "OnConnect from: " << socketConnection->getRemoteAddress().toString();
+        },
+        [](SocketConnection* socketConnection) -> void {
+            VLOG(0) << "OnConnected from: " << socketConnection->getRemoteAddress().toString();
+        },
+        [](SocketConnection* socketConnection) -> void {
+            VLOG(0) << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString();
         });
-    */
+
+    client.connect("/tmp/testsocket", [](const Client::SocketAddress& socketAddress, int errnum) -> void {
+        if (errnum == 0) {
+            VLOG(0) << "Client connected to " << socketAddress.toString();
+        } else {
+            VLOG(0) << "Error: Client trying to connect to " << socketAddress.toString() << " : errno = " << errnum;
+        }
+    });
 
     using ClientTLS = net::in::stream::tls::SocketClient<ClientContextFactory>;
     using SocketConnectionTLS = ClientTLS::SocketConnection;
@@ -42,13 +41,13 @@ int main(int argc, char* argv[]) {
 
     ClientTLS clienttls(
         [](SocketConnectionTLS* socketConnection) -> void {
-            std::cout << "OnConnect from: " << socketConnection->getRemoteAddress().toString() << std::endl;
+            VLOG(0) << "OnConnect from: " << socketConnection->getRemoteAddress().toString();
         },
         [](SocketConnectionTLS* socketConnection) -> void {
-            std::cout << "OnConnected from: " << socketConnection->getRemoteAddress().toString() << std::endl;
+            VLOG(0) << "OnConnected from: " << socketConnection->getRemoteAddress().toString();
         },
         [](SocketConnectionTLS* socketConnection) -> void {
-            std::cout << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString() << std::endl;
+            VLOG(0) << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString();
         },
         options);
 

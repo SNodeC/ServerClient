@@ -1,11 +1,13 @@
 #ifndef CLIENTCONTEXT_H
 #define CLIENTCONTEXT_H
 
-#include "KeyboardReader.h"
-
-#include <core/socket/SocketConnection.h>
 #include <core/socket/SocketContext.h>
 #include <core/socket/SocketContextFactory.h>
+
+class KeyboardReader;
+namespace core::socket {
+    class SocketConnection;
+}
 
 class ClientContext : public core::socket::SocketContext {
 public:

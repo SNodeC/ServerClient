@@ -1,9 +1,10 @@
 #ifndef KEYBOARDREADER_H
 #define KEYBOARDREADER_H
 
-#include "core/eventreceiver/ReadEventReceiver.h"
+#include "core/eventreceiver/ReadEventReceiver.h" // IWYU pragma: export
 
-#include <cstddef>
+// IWYU pragma: no_include <core/eventreceiver/ReadEventReceiver.h>
+
 #include <functional>
 #include <string>
 

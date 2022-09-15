@@ -1,5 +1,8 @@
 #include "ClientContext.h"
 
+#include "KeyboardReader.h" // for KeyboardReader
+
+#include <functional> // for function
 #include <log/Logger.h>
 #include <string>
 
