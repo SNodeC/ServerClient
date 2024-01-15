@@ -33,12 +33,6 @@ int main(int argc, char* argv[]) {
     using ClientTLS = net::in::stream::tls::SocketClient<ClientContextFactory>;
     using SocketConnectionTLS = ClientTLS::SocketConnection;
 
-    std::map<std::string, std::any> options;
-    options["CertChain"] = "/home/voc/projects/ServerClient/Client-End-Entity.pem";
-    options["CertChainKey"] = "/home/voc/projects/ServerClient/Client-End-Entity-Key.pem";
-    options["Password"] = "pentium5";
-    options["CaFile"] = "/home/voc/projects/ServerClient/VolkerChristianRootCA.pem";
-
     ClientTLS clienttls(
         [](SocketConnectionTLS* socketConnection) -> void {
             VLOG(0) << "OnConnect from: " << socketConnection->getRemoteAddress().toString();
@@ -48,8 +42,13 @@ int main(int argc, char* argv[]) {
         },
         [](SocketConnectionTLS* socketConnection) -> void {
             VLOG(0) << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString();
-        },
-        options);
+        });
+
+    clienttls.getConfig()
+        .setCertChain("/home/voc/projects/ServerClient/Client-End-Entity.pem")
+        .setCertKey("/home/voc/projects/ServerClient/Client-End-Entity-Key.pem")
+        .setCertKeyPassword("pentium5")
+        .setCaCertFile("/home/voc/projects/ServerClient/VolkerChristianRootCA.pem");
 
     clienttls.connect("localhost", 8082, [](const ClientTLS::SocketAddress& socketAddress, int errnum) -> void {
         if (errnum < 0) {

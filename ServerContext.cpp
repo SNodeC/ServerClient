@@ -5,8 +5,8 @@
 #include <iostream>
 #include <string> // for string
 
-ServerContext::ServerContext(core::socket::SocketConnection* socketConnection)
-    : core::socket::SocketContext(socketConnection) {
+ServerContext::ServerContext(core::socket::stream::SocketConnection* socketConnection)
+    : core::socket::stream::SocketContext(socketConnection) {
 }
 
 void ServerContext::onConnected() {
@@ -19,7 +19,11 @@ void ServerContext::onDisconnected() {
     ChatApp::instance().removeServerContext(this);
 }
 
-std::size_t ServerContext::onReceiveFromPeer() {
+bool ServerContext::onSignal(int signum) {
+    return true;
+}
+
+std::size_t ServerContext::onReceivedFromPeer() {
     char buffer[1024];
 
     std::size_t numBytesRead = readFromPeer(buffer, 1023);
@@ -32,6 +36,6 @@ std::size_t ServerContext::onReceiveFromPeer() {
     return numBytesRead;
 }
 
-core::socket::SocketContext* ServerContextFactory::create(core::socket::SocketConnection* socketConnection) {
+core::socket::stream::SocketContext* ServerContextFactory::create(core::socket::stream::SocketConnection* socketConnection) {
     return new ServerContext(socketConnection);
 }

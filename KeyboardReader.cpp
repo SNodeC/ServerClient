@@ -8,10 +8,14 @@
 #include <unistd.h>
 
 KeyboardReader::KeyboardReader(ClientContext* clientContext, const std::function<void(std::string)>& callBack)
-    : core::eventreceiver::ReadEventReceiver("KeyboardReader")
+    : core::eventreceiver::ReadEventReceiver("KeyboardReader", 0)
     , callBack(callBack)
     , clientContext(clientContext) {
-    enable(STDIN_FILENO);
+    if (enable(STDIN_FILENO)) {
+        std::cout << "KeyboardReader enabled";
+    } else {
+        std::cout << "KeyboardReader not enabled";
+    }
 }
 
 KeyboardReader::~KeyboardReader() {

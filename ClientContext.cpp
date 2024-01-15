@@ -6,8 +6,8 @@
 #include <log/Logger.h>
 #include <string>
 
-ClientContext::ClientContext(core::socket::SocketConnection* socketConnection)
-    : core::socket::SocketContext(socketConnection)
+ClientContext::ClientContext(core::socket::stream::SocketConnection* socketConnection)
+    : core::socket::stream::SocketContext(socketConnection)
     , keyboardReader(new KeyboardReader(this, [this](std::string text) -> void {
         sendToPeer(text);
     })) {
@@ -28,7 +28,11 @@ void ClientContext::onDisconnected() {
     }
 }
 
-std::size_t ClientContext::onReceiveFromPeer() {
+bool ClientContext::onSignal(int signum) {
+    return true;
+}
+
+std::size_t ClientContext::onReceivedFromPeer() {
     char buffer[1024];
 
     std::size_t numBytesRead = readFromPeer(buffer, 1024);
@@ -42,6 +46,6 @@ void ClientContext::keyboardReaderAway() {
     keyboardReader = nullptr;
 }
 
-core::socket::SocketContext* ClientContextFactory::create(core::socket::SocketConnection* socketConnection) {
+core::socket::stream::SocketContext* ClientContextFactory::create(core::socket::stream::SocketConnection* socketConnection) {
     return new ClientContext(socketConnection);
 }

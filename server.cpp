@@ -37,12 +37,6 @@ int main(int argc, char* argv[]) {
     using ServerTLS = net::in::stream::tls::SocketServer<ServerContextFactory>;
     using SocketConnectionTLS = net::in::stream::tls::SocketServer<ServerContextFactory>::SocketConnection;
 
-    std::map<std::string, std::any> options;
-    options["CertChain"] = "/home/voc/projects/ServerClient/WebServerCertificateChain.pem";
-    options["CertChainKey"] = "/home/voc/projects/ServerClient/Volker_Christian_-_WEB-Cert.pem";
-    options["Password"] = "pentium5";
-    options["CaFile"] = "/home/voc/projects/ServerClient/Client-Root-CA.crt";
-
     ServerTLS servertls(
         [](SocketConnectionTLS* socketConnection) -> void {
             VLOG(0) << "OnConnect from: " << socketConnection->getRemoteAddress().toString();
@@ -52,8 +46,13 @@ int main(int argc, char* argv[]) {
         },
         [](SocketConnectionTLS* socketConnection) -> void {
             VLOG(0) << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString();
-        },
-        options);
+        });
+
+    servertls.getConfig()
+        .setCertChain("/home/voc/projects/ServerClient/WebServerCertificateChain.pem")
+        .setCertKey("/home/voc/projects/ServerClient/Volker_Christian_-_WEB-Cert.pem")
+        .setCertKeyPassword("pentium5")
+        .setCaCertFile("/home/voc/projects/ServerClient/Client-Root-CA.crt");
 
     servertls.listen(8082, 5, [](const ServerTLS::SocketAddress& socketAddress, int errnum) -> void {
         if (errnum < 0) {
@@ -79,7 +78,7 @@ int main(int argc, char* argv[]) {
             VLOG(0) << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString();
         });
 
-    server6.listen(8081, 5, [](const Server6::SocketAddress& socketAddress, int errnum) -> void {
+    server6.listen(8081, 5, [](const Server6::SocketAddress& socketAddress, core::socket::State errnum) -> void {
         if (errnum < 0) {
             PLOG(ERROR) << "OnError";
         } else if (errnum > 0) {
@@ -103,7 +102,7 @@ int main(int argc, char* argv[]) {
             VLOG(0) << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString();
         });
 
-    serverUn.listen("/tmp/testsocket", 5, [](const SocketConnectionUn::SocketAddress& socketAddress, int errnum) -> void {
+    serverUn.listen("/tmp/testsocket", 5, [](const ServerUn::SocketAddress& socketAddress, core::socket::State errnum) -> void {
         if (errnum < 0) {
             PLOG(ERROR) << "OnError";
         } else if (errnum > 0) {

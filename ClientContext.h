@@ -1,17 +1,17 @@
 #ifndef CLIENTCONTEXT_H
 #define CLIENTCONTEXT_H
 
-#include <core/socket/SocketContext.h>
-#include <core/socket/SocketContextFactory.h>
+#include <core/socket/stream/SocketContext.h>
+#include <core/socket/stream/SocketContextFactory.h>
 
 class KeyboardReader;
-namespace core::socket {
+namespace core::socket::stream {
     class SocketConnection;
 }
 
-class ClientContext : public core::socket::SocketContext {
+class ClientContext : public core::socket::stream::SocketContext {
 public:
-    explicit ClientContext(core::socket::SocketConnection* socketConnection);
+    explicit ClientContext(core::socket::stream::SocketConnection* socketConnection);
     ~ClientContext();
 
     void keyboardReaderAway();
@@ -19,14 +19,16 @@ public:
 private:
     void onConnected() override;
     void onDisconnected() override;
-    std::size_t onReceiveFromPeer() override;
+    [[nodiscard]] bool onSignal(int signum) override;
+
+    std::size_t onReceivedFromPeer() override;
 
     KeyboardReader* keyboardReader = nullptr;
 };
 
-class ClientContextFactory : public core::socket::SocketContextFactory {
+class ClientContextFactory : public core::socket::stream::SocketContextFactory {
 private:
-    core::socket::SocketContext* create(core::socket::SocketConnection* socketConnection) override;
+    core::socket::stream::SocketContext* create(core::socket::stream::SocketConnection* socketConnection) override;
 };
 
 #endif // CLIENTCONTEXT_H
