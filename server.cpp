@@ -1,5 +1,5 @@
 #include "ServerContext.h" // IWYU pragma: keep
-#include "log/Logger.h"
+#include <SemanticLog.h>
 
 #include <core/SNodeC.h>
 #include <net/in/stream/legacy/SocketServer.h>
@@ -15,22 +15,23 @@ int main(int argc, char* argv[]) {
 
     Server server(
         [](SocketConnection* socketConnection) -> void {
-            VLOG(0) << "OnConnect from: " << socketConnection->getRemoteAddress().toString();
+            snode::semantic::appLog().debug() << "OnConnect from: " << socketConnection->getRemoteAddress().toString();
         },
         [](SocketConnection* socketConnection) -> void {
-            VLOG(0) << "OnConnected from: " << socketConnection->getRemoteAddress().toString();
+            snode::semantic::appLog().debug() << "OnConnected from: " << socketConnection->getRemoteAddress().toString();
         },
         [](SocketConnection* socketConnection) -> void {
-            VLOG(0) << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString();
+            snode::semantic::appLog().debug() << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString();
         });
 
     server.listen(8080, 5, [](const Server::SocketAddress& socketAddress, int errnum) -> void {
         if (errnum < 0) {
-            PLOG(ERROR) << "OnError";
+            snode::semantic::sysError(snode::semantic::appLog(), logger::LogLevel::Error, errnum) << "OnError";
         } else if (errnum > 0) {
-            PLOG(ERROR) << "OnError: " << socketAddress.toString();
+            snode::semantic::sysError(snode::semantic::appLog(), logger::LogLevel::Error, errnum)
+                << "OnError: " << socketAddress.toString();
         } else {
-            VLOG(0) << "snode.c listening on " << socketAddress.toString();
+            snode::semantic::appLog().info() << "snode.c listening on " << socketAddress.toString();
         }
     });
 
@@ -39,13 +40,13 @@ int main(int argc, char* argv[]) {
 
     ServerTLS servertls(
         [](SocketConnectionTLS* socketConnection) -> void {
-            VLOG(0) << "OnConnect from: " << socketConnection->getRemoteAddress().toString();
+            snode::semantic::appLog().debug() << "OnConnect from: " << socketConnection->getRemoteAddress().toString();
         },
         [](SocketConnectionTLS* socketConnection) -> void {
-            VLOG(0) << "OnConnected from: " << socketConnection->getRemoteAddress().toString();
+            snode::semantic::appLog().debug() << "OnConnected from: " << socketConnection->getRemoteAddress().toString();
         },
         [](SocketConnectionTLS* socketConnection) -> void {
-            VLOG(0) << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString();
+            snode::semantic::appLog().debug() << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString();
         });
 
     servertls.getConfig()
@@ -56,11 +57,12 @@ int main(int argc, char* argv[]) {
 
     servertls.listen(8082, 5, [](const ServerTLS::SocketAddress& socketAddress, int errnum) -> void {
         if (errnum < 0) {
-            PLOG(ERROR) << "OnError";
+            snode::semantic::sysError(snode::semantic::appLog(), logger::LogLevel::Error, errnum) << "OnError";
         } else if (errnum > 0) {
-            PLOG(ERROR) << "OnError: " << socketAddress.toString();
+            snode::semantic::sysError(snode::semantic::appLog(), logger::LogLevel::Error, errnum)
+                << "OnError: " << socketAddress.toString();
         } else {
-            VLOG(0) << "snode.c listening on " << socketAddress.toString();
+            snode::semantic::appLog().info() << "snode.c listening on " << socketAddress.toString();
         }
     });
 
@@ -69,22 +71,26 @@ int main(int argc, char* argv[]) {
 
     Server6 server6(
         [](SocketConnection6* socketConnection) -> void {
-            VLOG(0) << "OnConnect from: " << socketConnection->getRemoteAddress().toString();
+            snode::semantic::appLog().debug() << "OnConnect from: " << socketConnection->getRemoteAddress().toString();
         },
         [](SocketConnection6* socketConnection) -> void {
-            VLOG(0) << "OnConnected from: " << socketConnection->getRemoteAddress().toString();
+            snode::semantic::appLog().debug() << "OnConnected from: " << socketConnection->getRemoteAddress().toString();
         },
         [](SocketConnection6* socketConnection) -> void {
-            VLOG(0) << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString();
+            snode::semantic::appLog().debug() << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString();
         });
 
     server6.listen(8081, 5, [](const Server6::SocketAddress& socketAddress, core::socket::State errnum) -> void {
         if (errnum < 0) {
-            PLOG(ERROR) << "OnError";
+            snode::semantic::sysError(
+                snode::semantic::appLog(), logger::LogLevel::Error, static_cast<int>(errnum))
+                << "OnError";
         } else if (errnum > 0) {
-            PLOG(ERROR) << "OnError: " << socketAddress.toString();
+            snode::semantic::sysError(
+                snode::semantic::appLog(), logger::LogLevel::Error, static_cast<int>(errnum))
+                << "OnError: " << socketAddress.toString();
         } else {
-            VLOG(0) << "snode.c listening on " << socketAddress.toString();
+            snode::semantic::appLog().info() << "snode.c listening on " << socketAddress.toString();
         }
     });
 
@@ -93,22 +99,26 @@ int main(int argc, char* argv[]) {
 
     ServerUn serverUn(
         [](SocketConnectionUn* socketConnection) -> void {
-            VLOG(0) << "OnConnect from: " << socketConnection->getRemoteAddress().toString();
+            snode::semantic::appLog().debug() << "OnConnect from: " << socketConnection->getRemoteAddress().toString();
         },
         [](SocketConnectionUn* socketConnection) -> void {
-            VLOG(0) << "OnConnected from: " << socketConnection->getRemoteAddress().toString();
+            snode::semantic::appLog().debug() << "OnConnected from: " << socketConnection->getRemoteAddress().toString();
         },
         [](SocketConnectionUn* socketConnection) -> void {
-            VLOG(0) << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString();
+            snode::semantic::appLog().debug() << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString();
         });
 
     serverUn.listen("/tmp/testsocket", 5, [](const ServerUn::SocketAddress& socketAddress, core::socket::State errnum) -> void {
         if (errnum < 0) {
-            PLOG(ERROR) << "OnError";
+            snode::semantic::sysError(
+                snode::semantic::appLog(), logger::LogLevel::Error, static_cast<int>(errnum))
+                << "OnError";
         } else if (errnum > 0) {
-            PLOG(ERROR) << "OnError: " << socketAddress.toString();
+            snode::semantic::sysError(
+                snode::semantic::appLog(), logger::LogLevel::Error, static_cast<int>(errnum))
+                << "OnError: " << socketAddress.toString();
         } else {
-            VLOG(0) << "snode.c listening on " << socketAddress.toString();
+            snode::semantic::appLog().info() << "snode.c listening on " << socketAddress.toString();
         }
     });
 

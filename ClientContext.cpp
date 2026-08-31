@@ -3,7 +3,7 @@
 #include "KeyboardReader.h" // for KeyboardReader
 
 #include <functional> // for function
-#include <log/Logger.h>
+#include <SemanticLog.h>
 #include <string>
 
 ClientContext::ClientContext(core::socket::stream::SocketConnection* socketConnection)
@@ -37,7 +37,10 @@ std::size_t ClientContext::onReceivedFromPeer() {
 
     std::size_t numBytesRead = readFromPeer(buffer, 1024);
 
-    VLOG(0) << "Buffer: " << std::string(buffer, numBytesRead);
+    auto log = snode::semantic::appLog();
+    if (log.enabled(logger::LogLevel::Trace)) {
+        log.trace() << "Buffer: " << std::string(buffer, numBytesRead);
+    }
 
     return numBytesRead;
 }

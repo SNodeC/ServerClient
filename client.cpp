@@ -1,5 +1,5 @@
 #include "ClientContext.h" // IWYU pragma: keep
-#include "log/Logger.h"
+#include <SemanticLog.h>
 
 #include <core/SNodeC.h>
 #include <net/in/stream/tls/SocketClient.h>
@@ -13,20 +13,21 @@ int main(int argc, char* argv[]) {
 
     Client client(
         [](SocketConnection* socketConnection) -> void {
-            VLOG(0) << "OnConnect from: " << socketConnection->getRemoteAddress().toString();
+            snode::semantic::appLog().debug() << "OnConnect from: " << socketConnection->getRemoteAddress().toString();
         },
         [](SocketConnection* socketConnection) -> void {
-            VLOG(0) << "OnConnected from: " << socketConnection->getRemoteAddress().toString();
+            snode::semantic::appLog().debug() << "OnConnected from: " << socketConnection->getRemoteAddress().toString();
         },
         [](SocketConnection* socketConnection) -> void {
-            VLOG(0) << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString();
+            snode::semantic::appLog().debug() << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString();
         });
 
     client.connect("/tmp/testsocket", [](const Client::SocketAddress& socketAddress, int errnum) -> void {
         if (errnum == 0) {
-            VLOG(0) << "Client connected to " << socketAddress.toString();
+            snode::semantic::appLog().info() << "Client connected to " << socketAddress.toString();
         } else {
-            VLOG(0) << "Error: Client trying to connect to " << socketAddress.toString() << " : errno = " << errnum;
+            snode::semantic::sysError(snode::semantic::appLog(), logger::LogLevel::Error, errnum)
+                << "Client failed to connect to " << socketAddress.toString();
         }
     });
 
@@ -35,13 +36,13 @@ int main(int argc, char* argv[]) {
 
     ClientTLS clienttls(
         [](SocketConnectionTLS* socketConnection) -> void {
-            VLOG(0) << "OnConnect from: " << socketConnection->getRemoteAddress().toString();
+            snode::semantic::appLog().debug() << "OnConnect from: " << socketConnection->getRemoteAddress().toString();
         },
         [](SocketConnectionTLS* socketConnection) -> void {
-            VLOG(0) << "OnConnected from: " << socketConnection->getRemoteAddress().toString();
+            snode::semantic::appLog().debug() << "OnConnected from: " << socketConnection->getRemoteAddress().toString();
         },
         [](SocketConnectionTLS* socketConnection) -> void {
-            VLOG(0) << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString();
+            snode::semantic::appLog().debug() << "OnDisconnect from: " << socketConnection->getRemoteAddress().toString();
         });
 
     clienttls.getConfig()
@@ -52,11 +53,12 @@ int main(int argc, char* argv[]) {
 
     clienttls.connect("localhost", 8082, [](const ClientTLS::SocketAddress& socketAddress, int errnum) -> void {
         if (errnum < 0) {
-            PLOG(ERROR) << "OnError";
+            snode::semantic::sysError(snode::semantic::appLog(), logger::LogLevel::Error, errnum) << "OnError";
         } else if (errnum > 0) {
-            PLOG(ERROR) << "OnError: " << socketAddress.toString();
+            snode::semantic::sysError(snode::semantic::appLog(), logger::LogLevel::Error, errnum)
+                << "OnError: " << socketAddress.toString();
         } else {
-            VLOG(0) << "snode.c connecting to " << socketAddress.toString();
+            snode::semantic::appLog().info() << "snode.c connecting to " << socketAddress.toString();
         }
     });
 
